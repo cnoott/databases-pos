@@ -1,6 +1,9 @@
-﻿@model databseApp.Models.TransactionViewModel
+﻿@model databseApp.Models.UserViewModel
 @{
     ViewData["Title"] = "Checkout   ";
+}
+@{
+	var addy = Html.DisplayFor(model => model.Address);
 }
 
 <div class="jumbotron">
@@ -11,9 +14,10 @@
 	<div class="row">
 		<div class="col-50">
 			<h3>Customer Information</h3>
-			<div>Customer ID: </div>
-			<div>First Name: </div>
-			<div>Last Name: </div>
+			<div>Customer ID: @Html.DisplayFor(model => model.UserID)</div>
+			<div>Email: @Html.DisplayFor(model => model.Email)</div>
+			<div>First Name: @Html.DisplayFor(model => model.FirstName_)</div>
+			<div>Last Name: @Html.DisplayFor(model => model.LastName_)</div>
 		</div>
 	</div>
 
@@ -21,7 +25,9 @@
 		<div class="col-50">
 			<h3>Shipping Address</h3>
 			<label asp-for="Shipping_Address"><i class="fa fa-address-card-o"></i> Shipping Address</label>
-			<input type="text" asp-for="Shipping_Address" placeholder="542 W. 15th Street">
+			<input type="text" asp-for="Shipping_Address" placeholder="@addy">
+			<label>State</label>
+			<input type="text" value="@Html.DisplayFor(model => model.City)">
 		</div>
 	</div>
 
@@ -29,7 +35,7 @@
 		<div class="col-50">
 			<h3>Payment</h3>
 			<label asp-for="Payment_Method">Type of Card</label>
-			<input asp-for="Payment_Method" type="text" placeholder="John More Doe">
+			<input asp-for="Payment_Method" type="text" placeholder="VISA">
 			<label for="ccnum">Credit card number</label>
 			<input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
 			<label for="expmonth">Exp Month</label>
@@ -47,7 +53,8 @@
 			</div>
 		</div>
 	</div>
-	<input type="submit" value="Checkout" class="btn">
+	
+	<button type="submit" class="btn btn-primary">Checkout</button>
 </form>
 
 

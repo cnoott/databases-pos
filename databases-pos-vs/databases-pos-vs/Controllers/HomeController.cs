@@ -70,7 +70,6 @@ namespace databases_pos_vs.Controllers
                 HttpContext.Response.Cookies.Append("Sum", Price.ToString());
             }
 
-
             if (HttpContext.Request.Cookies.ContainsKey("Qty"))
             {
                 float newSum = Int32.Parse(HttpContext.Request.Cookies["Qty"]) + 1;
@@ -104,15 +103,15 @@ namespace databases_pos_vs.Controllers
                 daProducts.Fill(dtbl);
             
             }
-            return View(dtbl);
+            return View();
                
         }
 
 
         public IActionResult Checkout()
         {
-            //UserViewModel userViewModel = FetchUserByID();    ADD LATER
-            return View();
+            UserViewModel userViewModel = FetchUserByID();    
+            return View(userViewModel);
         }
         //checkout controller
         //1. SQL query for creating new Transaction_Info entry
@@ -127,82 +126,85 @@ namespace databases_pos_vs.Controllers
 
         
         [HttpPost]
-        public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] TransactionViewModel transactionViewModel)
+        public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] UserViewModel userViewModel)
         {
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
+
                 sqlConnection.Open();
 
-
+ 
 
                 //
 
                 string userId = HttpContext.Request.Cookies["id"];
                 string productCost = HttpContext.Request.Cookies["Sum"];
-                string totalCost = (Int32.Parse(productCost) + 12).ToString();
-
-                string today = DateTime.Today.ToString();
-
                 //string query = "INSERT INTO Transaction_Info(customer_id, payment_method, order_date, shipping_address, product_cost, shipping_cost, total_cost)";
-                //string query = String.Format("INSERT INTO Transaction_Info(customer_id, payment_method, order_date, shipping_address, product_cost, shipping_cost, total_cost) " +
-                //    "VALUES({0}, \"{1}\", \"{2}\", \"{3}\", \"{4}\", {5}, \"{6})\"", userId, transactionViewModel.Payment_Method, today, transactionViewModel.Shipping_Address,
-                //    productCost, "12", totalCost );
+                string query = String.Format("INSERT INTO Transaction_Info({0}, {1}, {2}, {3},)", userId);
 
-                MySqlCommand sqlCmd1 = new MySqlCommand("CreateNewTransaction", sqlConnection);
-                sqlCmd1.CommandType = CommandType.StoredProcedure;
-                sqlCmd1.Parameters.AddWithValue("@Customer_id", Int32.Parse(userId));
-                sqlCmd1.Parameters.AddWithValue("@Payment_method", transactionViewModel.Payment_Method);
-                sqlCmd1.Parameters.AddWithValue("@Order_date", today);
-                sqlCmd1.Parameters.AddWithValue("@Shipping_address", transactionViewModel.Shipping_Address);
-                sqlCmd1.Parameters.AddWithValue("@Product_cost", totalCost);
-                sqlCmd1.Parameters.AddWithValue("@Total_cost", Double.Parse(totalCost) + 12 );
+                MySqlCommand cmd = new MySqlCommand(query, sqlConnection);
 
-
-                sqlCmd1.ExecuteNonQuery();
-
-                
-
-
-                MySqlCommand sqlCmd = new MySqlCommand();
-
-                sqlCmd.Connection = sqlConnection;
-                sqlCmd.CommandText = "Select_most_recent_trxInfo";
+                MySqlCommand sqlCmd = new MySqlCommand("Select_most_recent_trxInfo", sqlConnection);
                 sqlCmd.CommandType = CommandType.StoredProcedure;
 
-                sqlCmd.Parameters.AddWithValue("@input", 11);
-                sqlCmd.Parameters["@input"].Direction = ParameterDirection.Input;
-
-                sqlCmd.Parameters.Add("@info", MySqlDbType.Int32);
-                sqlCmd.Parameters["@info"].Direction = ParameterDirection.Output;
+                sqlCmd.Parameters.Add("@trxInfoId", MySqlDbType.Int32);
+                sqlCmd.Parameters["@trxInfoId"].Direction = ParameterDirection.Output;
 
                 sqlCmd.ExecuteNonQuery();
-                System.Diagnostics.Debug.WriteLine("Tranx number: " + sqlCmd.Parameters["@info"].Value);
-                Object obj = sqlCmd.Parameters["@info"].Value;
-                int result = Convert.ToInt32(obj);
-                //
+                System.Diagnostics.Debug.WriteLine("Tranx number: " + sqlCmd.Parameters["@trxInfoId"].Value);
 
-
-
-                //string transactionInfoId = "9";
-
+                int transactionInfoId = Int32.Parse(sqlCmd.Parameters["@trxInfoId"].Value.ToString());
+               
                 string productIdsString = HttpContext.Request.Cookies["CartCookie"];
 
                 string[] productIds = productIdsString.Split(",");
-                string qty = HttpContext.Request.Cookies["Qty"];
 
                 foreach (var id in productIds)
                 {
                     //INSERT INTO Transactions(FK_transactioninfoID, productId, quantity) VALUES(transactionInfoId, Quantity);
-                    string transQuery = String.Format("INSERT INTO Transactions(transaction_info_id, product_id, quantity) VALUES({0}, {1}, \"{2}\" )", result, id, qty );
-                    MySqlCommand transCmd = new MySqlCommand(transQuery, sqlConnection);
-                    MySqlDataReader rdrr = transCmd.ExecuteReader();
-                    rdrr.Close();
+                    string transQuery = String.Format("INSERT INTO Transactions({0}, {1}, {2} )");
                 }
 
-                sqlConnection.Close();
+
 
             }
             return RedirectToAction(nameof(Index));
+        }
+
+
+
+        public UserViewModel FetchUserByID()
+        {
+            UserViewModel userViewModel = new UserViewModel();
+            using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
+            {
+                MySqlDataAdapter daProducts;
+                DataTable dtbl = new DataTable();
+                int userid = Int32.Parse(Request.Cookies["id"]);
+                string userrole = Request.Cookies["role"];
+                string sql;
+
+                sqlConnection.Open();
+
+                sql = string.Format("SELECT * FROM Users, Customers WHERE Users.user_id = '"+userid+"' AND Customers.CustomerID = '"+userid+"'");
+                
+                daProducts = new MySqlDataAdapter(sql, sqlConnection);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(daProducts);
+                daProducts.Fill(dtbl);
+ 
+
+                userViewModel.UserID = userid;
+                userViewModel.Role = userrole; 
+                userViewModel.Password = dtbl.Rows[0]["password"].ToString();
+                userViewModel.FirstName_ = dtbl.Rows[0]["FirstName"].ToString(); 
+                userViewModel.LastName_ = dtbl.Rows[0]["LastName"].ToString(); 
+                userViewModel.Email = dtbl.Rows[0]["email"].ToString(); 
+                userViewModel.Address = dtbl.Rows[0]["Address"].ToString(); 
+                userViewModel.City = dtbl.Rows[0]["City"].ToString(); 
+                userViewModel.State = dtbl.Rows[0]["State"].ToString(); 
+                userViewModel.Zipcode = dtbl.Rows[0]["Zipcode"].ToString(); 
+                return userViewModel;
+            }
         }
 
     }
