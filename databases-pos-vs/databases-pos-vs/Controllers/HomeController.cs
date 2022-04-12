@@ -91,6 +91,9 @@ namespace databases_pos_vs.Controllers
         public IActionResult Cart()
         {
             
+            if (HttpContext.Request.Cookies["CartCookie"] == null)
+                return RedirectToAction(nameof(Index));
+
             MySqlDataAdapter daProducts;
             DataTable dtbl = new DataTable();
 
@@ -188,7 +191,8 @@ namespace databases_pos_vs.Controllers
                 string productIdsString = HttpContext.Request.Cookies["CartCookie"];
 
                 string[] productIds = productIdsString.Split(",");
-                string qty = HttpContext.Request.Cookies["Qty"];
+                //string qty = HttpContext.Request.Cookies["Qty"];
+                string qty = "1";
 
                 foreach (var id in productIds)
                 {
@@ -200,6 +204,10 @@ namespace databases_pos_vs.Controllers
                 }
 
                 sqlConnection.Close();
+
+                HttpContext.Response.Cookies.Delete("CartCookie");
+                HttpContext.Response.Cookies.Delete("Qty");
+                HttpContext.Response.Cookies.Delete("Sum");
 
             }
             return RedirectToAction(nameof(Index));

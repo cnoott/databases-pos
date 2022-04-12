@@ -26,10 +26,17 @@ namespace databseApp.Controllers
 
         public IActionResult Logout()
         {
+            
             HttpContext.Response.Cookies.Delete("role");
             HttpContext.Response.Cookies.Delete("email");
             HttpContext.Response.Cookies.Delete("name");
             HttpContext.Response.Cookies.Delete("id");
+
+            if (HttpContext.Request.Cookies["CartCookie"] != null) { 
+                HttpContext.Response.Cookies.Delete("CartCookie");
+                HttpContext.Response.Cookies.Delete("Qty");
+                HttpContext.Response.Cookies.Delete("Sum");
+            }
 
             return RedirectToAction("Index", new { Controller = "Home", Action = "Index" });
         }
