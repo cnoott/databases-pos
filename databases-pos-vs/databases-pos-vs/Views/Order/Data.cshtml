@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewData["Title"] = "Report Results";
+    decimal total = 0;
+    decimal oneTimeTotal = 0;
+    decimal revenue = 0;
+}
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Order ID
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Vendor Price
+            </th>
+            <th>
+                Ordered Date
+            </th>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Product Price
+            </th>
+            <th>
+                Revenue of this Product
+            </th>
+            <th>
+                Order Total
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Rows.Count; i++)
+        {
+            total += Model.Rows[i]["Vendor_price"] * Model.Rows[i]["Quantity"];
+            oneTimeTotal = Model.Rows[i]["Vendor_price"] * Model.Rows[i]["Quantity"];
+            revenue = Model.Rows[i]["Price"] * Model.Rows[i]["Times_sold"];
+        <tr>
+            <td>
+                @Model.Rows[i]["order_history_id"]
+            </td>
+            <td>
+                @Model.Rows[i]["Quantity"]
+            </td>
+            <td>
+                @Model.Rows[i]["Vendor_price"]
+            </td>
+            <td>
+                @Model.Rows[i]["Date_buy"]
+            </td>
+            <td>
+                @Model.Rows[i]["Name"]
+            </td>
+            <td>
+                @Model.Rows[i]["Price"]
+            </td>
+
+            <td data-toggle="popover" data-trigger="hover" data-html="true"
+                data-content="Retail Price: @Model.Rows[i]["price"] <br />Quantities Sold: @Model.Rows[i]["Times_sold"] ">
+                @revenue
+            </td>
+
+            <td data-toggle="popover" data-trigger="hover" data-html="true"
+                data-content="Vendor Price: @Model.Rows[i]["vendor_price"] <br />Quantity Ordered: @Model.Rows[i]["Quantity"] ">
+                @oneTimeTotal
+            </td>
+
+            @*<td>
+            <a asp-action="Purchase_Details" asp-route-id="@Model.Rows[i]["Transaction_id"]">Details of Order</a>
+        </td>*@
+        </tr>
+        }
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td >Total Buying Costs From Vendors: @total</td>
+        </tr>
+    </tbody>
+
+</table>
+
