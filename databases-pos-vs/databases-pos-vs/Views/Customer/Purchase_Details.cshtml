@@ -20,9 +20,6 @@
 				<th>
 					Price
 				</th>
-				<th>
-					Quanity
-				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -41,13 +38,11 @@
 				<td>
 					@Model.Rows[i]["price"]
 				</td>
-				<td>
-					@Model.Rows[i]["quantity"]
-				</td>
 			</tr>
 			}
 		</tbody>
 	</table>
-	}
 }
+<br />
+<a asp-action="Data">Back</a>
 

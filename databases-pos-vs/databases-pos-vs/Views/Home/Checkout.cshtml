@@ -1,11 +1,14 @@
 ﻿@model databseApp.Models.UserViewModel
 @{
-    ViewData["Title"] = "Checkout   ";
+    ViewData["Title"] = "Checkout";
+	int total = Int32.Parse(Context.Request.Cookies["Sum"]) + 12;
 }
 
 <div class="jumbotron">
 	<h1>@ViewData["Title"]</h1>
-	<h3>Total Amount: $@Context.Request.Cookies["Sum"]</h3>
+	<h3>Product Amount: $@Context.Request.Cookies["Sum"]</h3>
+	<h3>Shipping Fee: $12</h3>
+	<h3>Total Cost: @total</h3>
 </div>
 
 <form asp-action="Checkout">
