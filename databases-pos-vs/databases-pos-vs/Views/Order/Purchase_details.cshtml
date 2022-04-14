@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Transaction Details";
+}
+
+
+@if (Model != null)
+{
+    <h1>Order #@Model.Rows[0]["transaction_info_id"] Details</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Shoe ID
+                </th>
+                <th>
+                    Shoe Name
+                </th>
+                <th>
+                    Size
+                </th>
+                <th>
+                    Price
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Rows.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model.Rows[i]["product_id"]
+                    </td>
+                    <td>
+                        @Model.Rows[i]["name"]
+                    </td>
+                    <td>
+                        @Model.Rows[i]["size"]
+                    </td>
+                    <td>
+                        @Model.Rows[i]["price"]
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<br />
+<a asp-action="Data">Back</a>
+

@@ -10,6 +10,8 @@ using databseApp.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using System.Net.Mail;
+using System.Text;
 
 namespace databases_pos_vs.Controllers
 {
@@ -197,11 +199,50 @@ namespace databases_pos_vs.Controllers
                 foreach (var id in productIds)
                 {
                     //INSERT INTO Transactions(FK_transactioninfoID, productId, quantity) VALUES(transactionInfoId, Quantity);
-                    string transQuery = String.Format("INSERT INTO Transactions(transaction_info_id, product_id, quantity, inventory_id) VALUES({0}, {1}, \"{2}\",{3} )", result, id, qty, id);
+                    string transQuery = String.Format("SET @var=22;INSERT INTO Transactions(transaction_info_id, product_id, quantity, inventory_id) VALUES({0}, {1}, \"{2}\",{3} )", result, id, qty, id);
                     MySqlCommand transCmd = new MySqlCommand(transQuery, sqlConnection);
                     MySqlDataReader rdrr = transCmd.ExecuteReader();
+                   
                     rdrr.Close();
                 }
+
+                int r = 0;
+                string sql = "SELECT @var";
+                MySqlCommand cmd = new MySqlCommand(sql, sqlConnection);
+                object result1 = cmd.ExecuteScalar();
+                if (result1 != null)
+                {
+                    r = Convert.ToInt32(result1);
+                    System.Diagnostics.Debug.WriteLine("Number of countries in the world database is: " + r);
+                }
+
+                if(r == 33) {
+                    string to = "oscers1001dennis@gmail.com"; //To address    
+                    string from = "mastershoe111@gmail.com"; //From address    
+                    MailMessage message = new MailMessage(from, to);
+
+                    string mailbody = "In this article you will learn how to send a email using Asp.Net & C#";
+                    message.Subject = "Sending Email Using Asp.Net & C#";
+                    message.Body = mailbody;
+                    message.BodyEncoding = Encoding.UTF8;
+                    message.IsBodyHtml = true;
+                    SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
+                    System.Net.NetworkCredential basicCredential1 = new
+                    System.Net.NetworkCredential("mastershoe111@gmail.com", "shoemaster@1");
+                    client.EnableSsl = true;
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = basicCredential1;
+                    try
+                    {
+                        client.Send(message);
+                    }
+
+                    catch (Exception ex)
+                    {
+                        throw;
+                    }
+                }
+                
 
                 sqlConnection.Close();
 

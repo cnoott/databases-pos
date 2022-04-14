@@ -33,6 +33,7 @@ namespace databases_pos_vs.Controllers
                 string query = "SELECT * From VendorPurchases " +
                     "INNER JOIN Inventories ON VendorPurchases.inventory_id = Inventories.inventory_id " +
                     "INNER JOIN Products ON Inventories.inventory_id = Products.product_id";
+                
                 daTransactions = new MySqlDataAdapter(query, sqlConnection);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(daTransactions);
                 daTransactions.Fill(dtbl);
@@ -45,20 +46,24 @@ namespace databases_pos_vs.Controllers
         {
             MySqlDataAdapter daTransactions;
             DataTable dtbl = new DataTable();
-            using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
+            using (MySqlConnection conn = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
+                conn.Open();
+                string sql = "Set @val = 30;SELECT * FROM VendorPurchases WHERE quantity = @val";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
 
-                sqlConnection.Open();
-                string query = "SELECT transaction_info_id, Products.product_id, name, size, price, quantity FROM Transaction_Info, Transactions, Products WHERE Transaction_Info.transaction_id = '" + id + "' AND transaction_info_id = '" + id + "' AND Transactions.product_id = Products.product_id";
-                daTransactions = new MySqlDataAdapter(query, sqlConnection);
-                MySqlCommandBuilder cb = new MySqlCommandBuilder(daTransactions);
-                daTransactions.Fill(dtbl);
+                while (rdr.Read())
+                {
+                    System.Diagnostics.Debug.WriteLine(rdr[0] + " -- " + rdr[1]);
+                }
+                rdr.Close();
             }
 
             if (dtbl != null)
                 return View(dtbl);
             else
-                return RedirectToAction("Index", new { Controller = "Home", Action = "Index" });
+                return RedirectToAction("Index", new { Controller = "Order", Action = "Index" });
         }
     }
 }
