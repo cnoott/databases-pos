@@ -1,17 +1,27 @@
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using databaseApp.Models;
-using databases_pos_vs.Data;
-
-namespace databases_pos_vs.Controllers
+using databseApp.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Data.SqlClient;
+using System.Data;
+using MySql.Data.MySqlClient;
+using System.Web;
+namespace databseApp.Controllers
 {
     public class VendorController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        public VendorController(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+        }
         /*
         private readonly databases_pos_vsContext _context;
 
