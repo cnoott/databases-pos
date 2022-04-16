@@ -35,7 +35,10 @@ namespace databseApp.Controllers
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
                 sqlConnection.Open();
+
                 string query = "SELECT * From Transaction_Info WHERE customer_id = '"+userid+"' ORDER BY transaction_id DESC";
+
+              
                 daTransactions = new MySqlDataAdapter(query, sqlConnection);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(daTransactions);
                 daTransactions.Fill(dtbl);

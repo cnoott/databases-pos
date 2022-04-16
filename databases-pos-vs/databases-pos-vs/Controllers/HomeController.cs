@@ -72,7 +72,6 @@ namespace databases_pos_vs.Controllers
                 HttpContext.Response.Cookies.Append("Sum", Price.ToString());
             }
 
-
             if (HttpContext.Request.Cookies.ContainsKey("Qty"))
             {
                 float newSum = Int32.Parse(HttpContext.Request.Cookies["Qty"]) + 1;
@@ -109,13 +108,14 @@ namespace databases_pos_vs.Controllers
                 daProducts.Fill(dtbl);
             
             }
-            return View(dtbl);
+            return View();
                
         }
 
 
         public IActionResult Checkout()
         {
+
             UserViewModel userViewModel = FetchUserByID();  
             return View(userViewModel);
         }
@@ -132,23 +132,21 @@ namespace databases_pos_vs.Controllers
 
         
         [HttpPost]
-        public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] TransactionViewModel transactionViewModel)
+        public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] UserViewModel userViewModel)
         {
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
+
                 sqlConnection.Open();
 
-
+ 
 
                 //
 
                 string userId = HttpContext.Request.Cookies["id"];
                 string productCost = HttpContext.Request.Cookies["Sum"];
-                string totalCost = (Int32.Parse(productCost) + 12).ToString();
-
-                string today = DateTime.Today.ToString();
-
                 //string query = "INSERT INTO Transaction_Info(customer_id, payment_method, order_date, shipping_address, product_cost, shipping_cost, total_cost)";
+
                 //string query = String.Format("INSERT INTO Transaction_Info(customer_id, payment_method, order_date, shipping_address, product_cost, shipping_cost, total_cost) " +
                 //    "VALUES({0}, \"{1}\", \"{2}\", \"{3}\", \"{4}\", {5}, \"{6})\"", userId, transactionViewModel.Payment_Method, today, transactionViewModel.Shipping_Address,
                 //    productCost, "12", totalCost );
@@ -163,42 +161,31 @@ namespace databases_pos_vs.Controllers
                 sqlCmd1.Parameters.AddWithValue("@Total_cost", Double.Parse(totalCost));
 
 
-                sqlCmd1.ExecuteNonQuery();
+                MySqlCommand cmd = new MySqlCommand(query, sqlConnection);
 
-                
-
-
-                MySqlCommand sqlCmd = new MySqlCommand();
-
-                sqlCmd.Connection = sqlConnection;
-                sqlCmd.CommandText = "Select_most_recent_trxInfo";
+                MySqlCommand sqlCmd = new MySqlCommand("Select_most_recent_trxInfo", sqlConnection);
                 sqlCmd.CommandType = CommandType.StoredProcedure;
 
-                sqlCmd.Parameters.AddWithValue("@input", 11);
-                sqlCmd.Parameters["@input"].Direction = ParameterDirection.Input;
-
-                sqlCmd.Parameters.Add("@info", MySqlDbType.Int32);
-                sqlCmd.Parameters["@info"].Direction = ParameterDirection.Output;
+                sqlCmd.Parameters.Add("@trxInfoId", MySqlDbType.Int32);
+                sqlCmd.Parameters["@trxInfoId"].Direction = ParameterDirection.Output;
 
                 sqlCmd.ExecuteNonQuery();
-                System.Diagnostics.Debug.WriteLine("Tranx number: " + sqlCmd.Parameters["@info"].Value);
-                Object obj = sqlCmd.Parameters["@info"].Value;
-                int result = Convert.ToInt32(obj);
-                //
+                System.Diagnostics.Debug.WriteLine("Tranx number: " + sqlCmd.Parameters["@trxInfoId"].Value);
 
-
-
-                //string transactionInfoId = "9";
-
+                int transactionInfoId = Int32.Parse(sqlCmd.Parameters["@trxInfoId"].Value.ToString());
+               
                 string productIdsString = HttpContext.Request.Cookies["CartCookie"];
 
                 string[] productIds = productIdsString.Split(",");
+
                 //string qty = HttpContext.Request.Cookies["Qty"];
                 string qty = "1";
+
 
                 foreach (var id in productIds)
                 {
                     //INSERT INTO Transactions(FK_transactioninfoID, productId, quantity) VALUES(transactionInfoId, Quantity);
+
                     string transQuery = String.Format("SET @var=22;INSERT INTO Transactions(transaction_info_id, product_id, quantity, inventory_id) VALUES({0}, {1}, \"{2}\",{3} )", result, id, qty, id);
                     MySqlCommand transCmd = new MySqlCommand(transQuery, sqlConnection);
                     MySqlDataReader rdrr = transCmd.ExecuteReader();
@@ -252,6 +239,7 @@ namespace databases_pos_vs.Controllers
 
                 sqlConnection.Close();
 
+
                 HttpContext.Response.Cookies.Delete("CartCookie");
                 HttpContext.Response.Cookies.Delete("Qty");
                 HttpContext.Response.Cookies.Delete("Sum");
@@ -275,6 +263,7 @@ namespace databases_pos_vs.Controllers
 
                 sqlConnection.Open();
 
+
                     sql = string.Format("SELECT * FROM Users, Customers WHERE Users.user_id = '"+userid+"' AND Customers.CustomerID = '"+userid+"'");
                
                 daProducts = new MySqlDataAdapter(sql, sqlConnection);
@@ -296,5 +285,6 @@ namespace databases_pos_vs.Controllers
                 return userViewModel;
             }
         }
+
     }
 }
