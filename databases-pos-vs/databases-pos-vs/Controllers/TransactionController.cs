@@ -79,66 +79,27 @@ namespace databseApp.Controllers
 
                 System.Diagnostics.Debug.WriteLine(query);
 
-
             }
             return View(dtbl);
         }
  
-
-        // GET: Transaction/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Details(int id)
         {
-            return View();
+            MySqlDataAdapter daTransactions;
+            DataTable dtbl = new DataTable();
+            using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
+            {
+
+                sqlConnection.Open();
+                string query = "SELECT transaction_info_id, Products.product_id, name, size, price, quantity FROM Transaction_Info, Transactions, Products WHERE Transaction_Info.transaction_id = '"+id+"' AND transaction_info_id = '"+id+"' AND Transactions.product_id = Products.product_id";
+                daTransactions = new MySqlDataAdapter(query, sqlConnection);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(daTransactions);
+                daTransactions.Fill(dtbl);
+            }
+            if (dtbl != null)
+                return View(dtbl);
+            else
+                return RedirectToAction("Index", new { Controller = "Home", Action = "Index" });
         }
-
-        // POST: Transaction/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create([Bind("Transaction_id,Customer_id,Payment_Method,Order_Date,Shipping_Address,Product_Cost,Shipping_Cost,Total_Cost")] TransactionViewModel transactionViewModel)
-        //{
-       
-          //  return View();
-        //}
-
-        // GET: Transaction/Edit/5
-        //public async Task<IActionResult> Edit(int? id)
-        //{
-        
-       //     return View();
-        //}
-
-        // POST: Transaction/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int id, [Bind("Transaction_id,Customer_id,Payment_Method,Order_Date,Shipping_Address,Product_Cost,Shipping_Cost,Total_Cost")] TransactionViewModel transactionViewModel)
-        //{
-    
-         //   return View();
-        //}
-
-        // GET: Transaction/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-       
-
-            return View();
-        }
-
-        // POST: Transaction/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            return View();
-        }
-
-       // private bool TransactionViewModelExists(int id)
-      //  {
-           // return _context.TransactionViewModel.Any(e => e.Transaction_id == id);
-      //  }
     }
 }
