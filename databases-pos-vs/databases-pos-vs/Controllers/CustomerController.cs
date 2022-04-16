@@ -47,7 +47,7 @@ namespace databseApp.Controllers
         }
 
 
-        public async Task<IActionResult> Purchase_Details(int id)
+        public IActionResult Purchase_Details(int id)
         {
             MySqlDataAdapter daTransactions;
             DataTable dtbl = new DataTable();

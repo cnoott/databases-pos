@@ -41,7 +41,7 @@ namespace databases_pos_vs.Controllers
 
             }
             return View(dtbl);
-           
+
         }
 
         public IActionResult Privacy()
@@ -72,6 +72,7 @@ namespace databases_pos_vs.Controllers
                 HttpContext.Response.Cookies.Append("Sum", Price.ToString());
             }
 
+
             if (HttpContext.Request.Cookies.ContainsKey("Qty"))
             {
                 float newSum = Int32.Parse(HttpContext.Request.Cookies["Qty"]) + 1;
@@ -91,7 +92,7 @@ namespace databases_pos_vs.Controllers
 
         public IActionResult Cart()
         {
-            
+
             if (HttpContext.Request.Cookies["CartCookie"] == null)
                 return RedirectToAction(nameof(Index));
 
@@ -106,17 +107,16 @@ namespace databases_pos_vs.Controllers
                 daProducts = new MySqlDataAdapter(sql, sqlConnection);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(daProducts);
                 daProducts.Fill(dtbl);
-            
+
             }
-            return View();
-               
+            return View(dtbl);
+
         }
 
 
         public IActionResult Checkout()
         {
-
-            UserViewModel userViewModel = FetchUserByID();  
+            UserViewModel userViewModel = FetchUserByID();
             return View(userViewModel);
         }
         //checkout controller
@@ -130,23 +130,25 @@ namespace databases_pos_vs.Controllers
         //Liam: grab product ids and make Transaction_info query
 
 
-        
+
         [HttpPost]
         public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] TransactionViewModel transactionViewModel)
         {
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
-
                 sqlConnection.Open();
 
- 
+
 
                 //
 
                 string userId = HttpContext.Request.Cookies["id"];
                 string productCost = HttpContext.Request.Cookies["Sum"];
-                //string query = "INSERT INTO Transaction_Info(customer_id, payment_method, order_date, shipping_address, product_cost, shipping_cost, total_cost)";
+                string totalCost = (Int32.Parse(productCost) + 12).ToString();
 
+                string today = DateTime.Today.ToString();
+
+                //string query = "INSERT INTO Transaction_Info(customer_id, payment_method, order_date, shipping_address, product_cost, shipping_cost, total_cost)";
                 //string query = String.Format("INSERT INTO Transaction_Info(customer_id, payment_method, order_date, shipping_address, product_cost, shipping_cost, total_cost) " +
                 //    "VALUES({0}, \"{1}\", \"{2}\", \"{3}\", \"{4}\", {5}, \"{6})\"", userId, transactionViewModel.Payment_Method, today, transactionViewModel.Shipping_Address,
                 //    productCost, "12", totalCost );
@@ -161,43 +163,48 @@ namespace databases_pos_vs.Controllers
                 sqlCmd1.Parameters.AddWithValue("@Total_cost", Double.Parse(totalCost));
 
 
-                MySqlCommand cmd = new MySqlCommand(query, sqlConnection);
+                sqlCmd1.ExecuteNonQuery();
 
-                MySqlCommand sqlCmd = new MySqlCommand("Select_most_recent_trxInfo", sqlConnection);
+
+
+
+                MySqlCommand sqlCmd = new MySqlCommand();
+
+                sqlCmd.Connection = sqlConnection;
+                sqlCmd.CommandText = "Select_most_recent_trxInfo";
                 sqlCmd.CommandType = CommandType.StoredProcedure;
 
-                sqlCmd.Parameters.Add("@trxInfoId", MySqlDbType.Int32);
-                sqlCmd.Parameters["@trxInfoId"].Direction = ParameterDirection.Output;
+                sqlCmd.Parameters.AddWithValue("@input", 11);
+                sqlCmd.Parameters["@input"].Direction = ParameterDirection.Input;
+
+                sqlCmd.Parameters.Add("@info", MySqlDbType.Int32);
+                sqlCmd.Parameters["@info"].Direction = ParameterDirection.Output;
 
                 sqlCmd.ExecuteNonQuery();
-                System.Diagnostics.Debug.WriteLine("Tranx number: " + sqlCmd.Parameters["@trxInfoId"].Value);
+                System.Diagnostics.Debug.WriteLine("Tranx number: " + sqlCmd.Parameters["@info"].Value);
+                Object obj = sqlCmd.Parameters["@info"].Value;
+                int result = Convert.ToInt32(obj);
+                //
 
-                int transactionInfoId = Int32.Parse(sqlCmd.Parameters["@trxInfoId"].Value.ToString());
-               
+
+
+                //string transactionInfoId = "9";
+
                 string productIdsString = HttpContext.Request.Cookies["CartCookie"];
 
                 string[] productIds = productIdsString.Split(",");
-
                 //string qty = HttpContext.Request.Cookies["Qty"];
                 string qty = "1";
-
 
                 foreach (var id in productIds)
                 {
                     //INSERT INTO Transactions(FK_transactioninfoID, productId, quantity) VALUES(transactionInfoId, Quantity);
-
                     string transQuery = String.Format("SET @var=22;INSERT INTO Transactions(transaction_info_id, product_id, quantity, inventory_id) VALUES({0}, {1}, \"{2}\",{3} )", result, id, qty, id);
                     MySqlCommand transCmd = new MySqlCommand(transQuery, sqlConnection);
                     MySqlDataReader rdrr = transCmd.ExecuteReader();
-                   
+
                     rdrr.Close();
                 }
-
-                DataTable edtbl = new DataTable();
-                MySqlDataAdapter daEmail;
-                string emailQuery = "SELECT email FROM Users WHERE user_id = '"+userId+"'";
-                daEmail = new MySqlDataAdapter(emailQuery, sqlConnection);
-                daEmail.Fill(edtbl);
 
                 int r = 0;
                 string sql = "SELECT @var";
@@ -209,13 +216,14 @@ namespace databases_pos_vs.Controllers
                     System.Diagnostics.Debug.WriteLine("Number of countries in the world database is: " + r);
                 }
 
-                if(r == 33) {
-                    string to = edtbl.Rows[0]["email"].ToString(); //To address    
+                if (r == 33)
+                {
+                    string to = "oscers1001dennis@gmail.com"; //To address    
                     string from = "mastershoe111@gmail.com"; //From address    
                     MailMessage message = new MailMessage(from, to);
 
-                    string mailbody = "You are receiving this email because we have confirmed your order! \n Expect your package in 1000 years";
-                    message.Subject = "JaLiChen Order";
+                    string mailbody = "In this article you will learn how to send a email using Asp.Net & C#";
+                    message.Subject = "Sending Email Using Asp.Net & C#";
                     message.Body = mailbody;
                     message.BodyEncoding = Encoding.UTF8;
                     message.IsBodyHtml = true;
@@ -235,10 +243,9 @@ namespace databases_pos_vs.Controllers
                         throw;
                     }
                 }
-                
+
 
                 sqlConnection.Close();
-
 
                 HttpContext.Response.Cookies.Delete("CartCookie");
                 HttpContext.Response.Cookies.Delete("Qty");
@@ -263,28 +270,26 @@ namespace databases_pos_vs.Controllers
 
                 sqlConnection.Open();
 
+                sql = string.Format("SELECT * FROM Users, Customers WHERE Users.user_id = '" + userid + "' AND Customers.CustomerID = '" + userid + "'");
 
-                    sql = string.Format("SELECT * FROM Users, Customers WHERE Users.user_id = '"+userid+"' AND Customers.CustomerID = '"+userid+"'");
-               
                 daProducts = new MySqlDataAdapter(sql, sqlConnection);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(daProducts);
                 daProducts.Fill(dtbl);
 
-                    userViewModel.UserID = userid;
-                    userViewModel.Role = userrole; 
-                    userViewModel.Password = dtbl.Rows[0]["password"].ToString();
-                    userViewModel.FirstName_ = dtbl.Rows[0]["FirstName"].ToString(); 
-                    userViewModel.LastName_ = dtbl.Rows[0]["LastName"].ToString(); 
-                    userViewModel.Email = dtbl.Rows[0]["email"].ToString(); 
-                    userViewModel.Address = dtbl.Rows[0]["Address"].ToString(); 
-                    userViewModel.City = dtbl.Rows[0]["City"].ToString(); 
-                    userViewModel.State = dtbl.Rows[0]["State"].ToString(); 
-                    userViewModel.Zipcode = dtbl.Rows[0]["Zipcode"].ToString(); 
+                userViewModel.UserID = userid;
+                userViewModel.Role = userrole;
+                userViewModel.Password = dtbl.Rows[0]["password"].ToString();
+                userViewModel.FirstName_ = dtbl.Rows[0]["FirstName"].ToString();
+                userViewModel.LastName_ = dtbl.Rows[0]["LastName"].ToString();
+                userViewModel.Email = dtbl.Rows[0]["email"].ToString();
+                userViewModel.Address = dtbl.Rows[0]["Address"].ToString();
+                userViewModel.City = dtbl.Rows[0]["City"].ToString();
+                userViewModel.State = dtbl.Rows[0]["State"].ToString();
+                userViewModel.Zipcode = dtbl.Rows[0]["Zipcode"].ToString();
 
- 
+
                 return userViewModel;
             }
         }
-
     }
 }
