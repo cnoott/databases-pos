@@ -29,5 +29,10 @@ namespace databseApp.Models
 
         [Range(1, int.MaxValue, ErrorMessage = "Should be greated than or equal to 1")]
         public float VendorPrice { get; set; }
+
+        //for create
+        public string[] VendorIds { get; set; }
+        public string[] VendorNames { get; set; }
+
     }
 }

@@ -55,9 +55,11 @@ namespace databseApp.Controllers
         {
             MySqlDataAdapter daVendors;
             DataTable dtbl = new DataTable();
+            //instead of using data table we just populate a vendor list in the cookies
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
                 sqlConnection.Open();
+                
                 string sql = "SELECT * FROM Vendors";
                 daVendors = new MySqlDataAdapter(sql, sqlConnection);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(daVendors);
@@ -65,7 +67,17 @@ namespace databseApp.Controllers
             }
             ProductViewModel productViewModel = new ProductViewModel();
             productViewModel.vendorsize = dtbl.Rows.Count;
-         
+            productViewModel.VendorIds = new String[99];
+            productViewModel.VendorNames = new String[99];
+
+            for (int i=0; i < dtbl.Rows.Count; i++)
+            {
+                productViewModel.VendorIds[i] = dtbl.Rows[i]["vendorID"].ToString();
+                productViewModel.VendorNames[i] = dtbl.Rows[i]["vendor_name"].ToString();
+
+
+            }
+
             return View(productViewModel);
         }
 
