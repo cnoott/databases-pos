@@ -1,36 +1,36 @@
-@model databaseApp.Models.VendorViewModel
+@model databseApp.Models.VendorViewModel
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Create Vendor</h1>
 
-<h4>VendorViewModel</h4>
-<hr />
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="VendorID" class="control-label"></label>
-                <input asp-for="VendorID" class="form-control" />
-                <span asp-validation-for="VendorID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SupervisorID" class="control-label"></label>
-                <input asp-for="SupervisorID" class="form-control" />
-                <span asp-validation-for="SupervisorID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="VendorName" class="control-label"></label>
+				<input asp-for="VendorName" class="form-control" />
+				<span asp-validation-for="VendorName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Location" class="control-label"></label>
+				<input asp-for="Location" class="form-control" />
+				<span asp-validation-for="Location" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Manager" class="control-label"></label>
+				<input asp-for="Manager" class="form-control" />
+				<span asp-validation-for="Manager" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Create" class="btn btn-primary" />
+			</div>
+		</form>
     </div>
 </div>
 
