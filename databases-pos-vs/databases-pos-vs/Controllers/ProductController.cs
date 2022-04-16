@@ -53,7 +53,20 @@ namespace databseApp.Controllers
         // GET: Product/Create
         public IActionResult Create()
         {
-            return View();
+            MySqlDataAdapter daVendors;
+            DataTable dtbl = new DataTable();
+            using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
+            {
+                sqlConnection.Open();
+                string sql = "SELECT * FROM Vendors";
+                daVendors = new MySqlDataAdapter(sql, sqlConnection);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(daVendors);
+                daVendors.Fill(dtbl);
+            }
+            ProductViewModel productViewModel = new ProductViewModel();
+            productViewModel.vendorsize = dtbl.Rows.Count;
+         
+            return View(productViewModel);
         }
 
         // POST: Product/Create
@@ -62,7 +75,7 @@ namespace databseApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Create([Bind("ProductId,Size,Price,Name,Image_url")] ProductViewModel productViewModel)
+        public IActionResult Create([Bind("ProductId,Size,Price,Name,Image_url,Vendor_id, VendorPrice, Quantity")] ProductViewModel productViewModel)
 
         {
             if (ModelState.IsValid)
@@ -80,7 +93,10 @@ namespace databseApp.Controllers
                     sqlCmd.Parameters.AddWithValue("@Image_url", productViewModel.Image_url);
 
                     sqlCmd.Parameters.AddWithValue("@Category_id", productViewModel.Category_id);
-                    sqlCmd.Parameters.AddWithValue("@Vendor_id", productViewModel.Vendor_id);
+                    sqlCmd.Parameters.AddWithValue("@Vendor_id_", productViewModel.Vendor_id);
+                    sqlCmd.Parameters.AddWithValue("@Quantity_", productViewModel.Quantity);
+                    sqlCmd.Parameters.AddWithValue("@Vendor_Price_", productViewModel.VendorPrice);
+
 
                     sqlCmd.ExecuteNonQuery();
                 }

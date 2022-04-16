@@ -18,7 +18,10 @@ namespace databseApp.Models
         public string City { get; set; }
         public string State { get; set; }
         public string Date { get; set; }
-        public string Payment_Method { get; set; }
-        public string Shipping_Address { get; set; }
+
+
+        public string Payment_Method{ get; set; }
+        public string  Shipping_Address { get; set; }
+
     }
 }

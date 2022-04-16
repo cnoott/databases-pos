@@ -17,38 +17,44 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="navbar-nav flex-grow-1">
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-						</li>
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
 
-
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
-						</li>
-						@if (Context.Request.Cookies.ContainsKey("email"))
+                        @if (Context.Request.Cookies.ContainsKey("email"))
                         {
+                            if (Context.Request.Cookies["role"] == "employee")
+                            {
 
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Report">Generate Transactions Report</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" sp-area="" asp-controller="User" asp-action="Details">Account</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Signout</a>
-						</li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Index">Manage Products</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Transaction" asp-action="Report">Generate Transactions Report</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Data">Generate Order Report</a>
+                                </li>
+
+                            }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" sp-area="" asp-controller="User" asp-action="Details">Account</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Signout</a>
+                            </li>
 
                         }
                         else
                         {
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="UserIndex">Login</a>
-						</li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="UserIndex">Login</a>
+                            </li>
                         }
 
                     </ul>
-                    @if (Context.Request.Cookies.ContainsKey("email"))
+                    @if (Context.Request.Cookies.ContainsKey("email") && Context.Request.Cookies["role"] == "customer")
                     {
                     <a href="/Home/Cart">
                     <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">

@@ -84,9 +84,11 @@
 		</dl>
 </div>
 <div>
-	<a asp-action="Edit" asp-route-id="@Model.UserID">Edit</a>
+	<a asp-action="Edit" asp-route-id="@Model.UserID">Edit Account</a>
 	<br />
-	<a asp-controller="Customer" asp-action="Data" asp-route-id="@Model.UserID">Generate Report</a>
+	@if (Context.Request.Cookies["role"] == "customer") {
+		<a asp-controller="Customer" asp-action="Data" asp-route-id="@Model.UserID">Generate Transaction History</a>
+	}
 </div>
 @section Scripts {
 	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
