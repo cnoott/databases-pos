@@ -132,7 +132,7 @@ namespace databases_pos_vs.Controllers
 
         
         [HttpPost]
-        public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] UserViewModel userViewModel)
+        public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] TransactionViewModel transactionViewModel)
         {
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
