@@ -21,97 +21,25 @@ namespace databases_pos_vs.Controllers
         }*/
 
         // GET: Vendor
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View();
+            MySqlDataAdapter vendors;
+            DataTable dtbl = new DataTable();
+     
+            using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
+            {
+                sqlConnection.Open();
+                string sql = "SELECT * FROM Vendors";
+                vendors = new MySqlDataAdapter(sql, sqlConnection);
+                MySqlCommandBuilder cb = new MySqlCommandBuilder(vendors);
+                vendors.Fill(dtbl);
+                
+            }
+            return View(dtbl);
         }
 
-        /*
-
-        // GET: Vendor/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vendorViewModel = await _context.VendorViewModel.FindAsync(id);
-            if (vendorViewModel == null)
-            {
-                return NotFound();
-            }
-            return View(vendorViewModel);
-        }
-
-        // POST: Vendor/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InventoryID,VendorID,Location,SupervisorID")] VendorViewModel vendorViewModel)
-        {
-            if (id != vendorViewModel.InventoryID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(vendorViewModel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VendorViewModelExists(vendorViewModel.InventoryID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(vendorViewModel);
-        }
         
-        // GET: Vendor/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var vendorViewModel = await _context.VendorViewModel
-                .FirstOrDefaultAsync(m => m.InventoryID == id);
-            if (vendorViewModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(vendorViewModel);
-        }
-
-        // POST: Vendor/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var vendorViewModel = await _context.VendorViewModel.FindAsync(id);
-            _context.VendorViewModel.Remove(vendorViewModel);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool VendorViewModelExists(int id)
-        {
-            return _context.VendorViewModel.Any(e => e.InventoryID == id);
-        }
-        */
+     
     }
 }
