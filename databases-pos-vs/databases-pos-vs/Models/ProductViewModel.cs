@@ -34,5 +34,7 @@ namespace databseApp.Models
         public string[] VendorIds { get; set; }
         public string[] VendorNames { get; set; }
 
+        public int inventory { get; set; }
+
     }
 }

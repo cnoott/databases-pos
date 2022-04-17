@@ -174,7 +174,7 @@ namespace databseApp.Controllers
                 DataTable dtbl = new DataTable();
 
                 sqlConnection.Open();
-                var sql = string.Format("SELECT * FROM Products WHERE Products.product_id = {0}", id);
+                var sql = string.Format("SELECT * FROM Products, Inventories WHERE Products.product_id = {0} AND Products.product_id = Inventories.inventory_id", id);
                 daProducts = new MySqlDataAdapter(sql, sqlConnection);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(daProducts);
                 daProducts.Fill(dtbl);
@@ -186,10 +186,10 @@ namespace databseApp.Controllers
                     productViewModel.Size = dtbl.Rows[0]["size"].ToString();
 
                     productViewModel.Price = (float)Convert.ToDouble(dtbl.Rows[0]["price"].ToString()); //Cant convert this for some reason 
-                    
+
                     productViewModel.Name = dtbl.Rows[0]["name"].ToString();
                     productViewModel.times_sold = Convert.ToInt32(dtbl.Rows[0]["times_sold"].ToString());
-
+                    productViewModel.inventory = Convert.ToInt32(dtbl.Rows[0]["product_quantity"].ToString());
 
                 }
                 return productViewModel;

@@ -9,44 +9,50 @@
 <div>
     <h4>ProductViewModel</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Size)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Size)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Category_id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Category_id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Vendor_id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Vendor_id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.times_sold)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.times_sold)
-        </dd>
-    </dl>
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Size)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Size)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Price)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Price)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Name)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Name)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Category_id)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Category_id)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Vendor_id)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Vendor_id)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.times_sold)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.times_sold)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.inventory)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.inventory)
+		</dd>
+	</dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
