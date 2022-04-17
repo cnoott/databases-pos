@@ -43,13 +43,11 @@
 
 			</td>
 			<td>
-				<a asp-action="Edit" asp-route-id="@Model.Rows[i]["product_id"]">Edit</a> |
-				<a asp-action="Details" asp-route-id="@Model.Rows[i]["product_id"]">Details</a> |
-				<a asp-action="Delete" asp-route-id="@Model.Rows[i]["product_id"]">Delete</a>
+				<a asp-action="Edit" asp-route-id="@Model.Rows[i]["VendorID"]">Edit</a> 
 			</td>
 		</tr>
     }
 	</tbody>
 </table>
 
-<a asp-action="Create" class="btn btn-primary">Create New Shoe</a>
+<a asp-controller="Vendor" asp-action="Create" class="btn btn-primary">Create New Vendor</a>
