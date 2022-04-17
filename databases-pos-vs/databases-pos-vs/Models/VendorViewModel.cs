@@ -14,7 +14,7 @@ namespace databseApp.Models
         public string VendorName { get; set; }
         public string Location { get; set; }
         public string Manager { get; set; }
-        public int sales { get; set; }
+        public int [] sales { get; set; }
 
     }
 }

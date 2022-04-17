@@ -206,6 +206,14 @@ namespace databases_pos_vs.Controllers
                     rdrr.Close();
                 }
 
+                /*
+                DataTable edtbl = new DataTable();
+                MySqlDataAdapter daEmail;
+                string emailQuery = "SELECT Users.email FROM Users WHERE Users.user_id = '"+userId+"'";
+                daEmail = new MySqlDataAdapter(emailQuery, sqlConnection);
+                daEmail.Fill(edtbl);
+                */
+
                 int r = 0;
                 string sql = "SELECT @var";
                 MySqlCommand cmd = new MySqlCommand(sql, sqlConnection);
@@ -218,12 +226,12 @@ namespace databases_pos_vs.Controllers
 
                 if (r == 33)
                 {
-                    string to = "oscers1001dennis@gmail.com"; //To address    
+                    string to = "oscers1001dennis@gmail.com"; //edtbl.Rows[0]["email"].ToString(); //To address    
                     string from = "mastershoe111@gmail.com"; //From address    
                     MailMessage message = new MailMessage(from, to);
 
-                    string mailbody = "In this article you will learn how to send a email using Asp.Net & C#";
-                    message.Subject = "Sending Email Using Asp.Net & C#";
+                    string mailbody = "You are receiving this email because we have confirmed your order! \n Expect your package in 1000 years";
+                    message.Subject = "JaLiChen Order";
                     message.Body = mailbody;
                     message.BodyEncoding = Encoding.UTF8;
                     message.IsBodyHtml = true;
