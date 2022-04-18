@@ -22,15 +22,17 @@
 
                         @if (Context.Request.Cookies.ContainsKey("email"))
                         {
-                            <button type="button" class="btn btn-light">
+  
+                            <button type="button" class="btn btn-light" >
 
                                 @Html.ActionLink("Add To Cart", "AddToCart", new
                                 {
                                     id = @Model.Rows[i]["Product_id"],
-                                    price = @Model.Rows[i]["Price"]
+                                    price = @Model.Rows[i]["Price"],
                                 })
 
                             </button>
+                
 
                         }
                         else
@@ -41,10 +43,6 @@
                             </button>
 
                         }
-
-
-
-
 
                     </div>
 
