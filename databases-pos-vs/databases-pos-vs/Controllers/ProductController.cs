@@ -119,9 +119,7 @@ namespace databseApp.Controllers
         // GET: Product/Edit/
         public IActionResult Edit(int id)
         {
-            ProductViewModel productViewModel = new ProductViewModel();
-            if (id > 0)
-                productViewModel = FetchProductByID(id);
+            ProductViewModel productViewModel = FetchProductByID(id);
             return View(productViewModel);
         }
 
@@ -134,29 +132,22 @@ namespace databseApp.Controllers
         {
 
 
-            if (ModelState.IsValid)
-            {
                 using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
                 {
                     sqlConnection.Open();
-                    MySqlCommand sqlCmd = new MySqlCommand("ProductsAddOrEdit", sqlConnection);
+                    MySqlCommand sqlCmd = new MySqlCommand("PEdit", sqlConnection);
                     sqlCmd.CommandType = CommandType.StoredProcedure;
-                    sqlCmd.Parameters.AddWithValue("@Product_id", productViewModel.ProductId);
-                    sqlCmd.Parameters.AddWithValue("@Size", productViewModel.Size);
-                    sqlCmd.Parameters.AddWithValue("@Price", productViewModel.Price);
-                    sqlCmd.Parameters.AddWithValue("@Name", productViewModel.Name);
-                    sqlCmd.Parameters.AddWithValue("@Vendor_id", productViewModel.Vendor_id);
-                    sqlCmd.Parameters.AddWithValue("@Image_url", productViewModel.Image_url);
+                    sqlCmd.Parameters.AddWithValue("@Product_id_", productViewModel.ProductId);
+                    sqlCmd.Parameters.AddWithValue("@Size_", productViewModel.Size);
+                    sqlCmd.Parameters.AddWithValue("@Price_", productViewModel.Price);
+                    sqlCmd.Parameters.AddWithValue("@Name_", productViewModel.Name);
+                    sqlCmd.Parameters.AddWithValue("@Image_url_", productViewModel.Image_url);
 
 
 
                     sqlCmd.ExecuteNonQuery();
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(productViewModel);
-
-
+                return RedirectToAction("Index", new { Controller = "Home", Action = "Index" });
         }
 
  
