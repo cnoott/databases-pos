@@ -104,7 +104,6 @@ namespace databseApp.Controllers
 
                     sqlCmd.Parameters.AddWithValue("@Image_url", productViewModel.Image_url);
 
-                    sqlCmd.Parameters.AddWithValue("@Category_id", productViewModel.Category_id);
                     sqlCmd.Parameters.AddWithValue("@Vendor_id_", productViewModel.Vendor_id);
                     sqlCmd.Parameters.AddWithValue("@Quantity_", productViewModel.Quantity);
                     sqlCmd.Parameters.AddWithValue("@Vendor_Price_", productViewModel.VendorPrice);
@@ -146,7 +145,6 @@ namespace databseApp.Controllers
                     sqlCmd.Parameters.AddWithValue("@Size", productViewModel.Size);
                     sqlCmd.Parameters.AddWithValue("@Price", productViewModel.Price);
                     sqlCmd.Parameters.AddWithValue("@Name", productViewModel.Name);
-                    sqlCmd.Parameters.AddWithValue("@Category_id", productViewModel.Category_id);
                     sqlCmd.Parameters.AddWithValue("@Vendor_id", productViewModel.Vendor_id);
                     sqlCmd.Parameters.AddWithValue("@Image_url", productViewModel.Image_url);
 
@@ -190,6 +188,7 @@ namespace databseApp.Controllers
                     productViewModel.Name = dtbl.Rows[0]["name"].ToString();
                     productViewModel.times_sold = Convert.ToInt32(dtbl.Rows[0]["times_sold"].ToString());
                     productViewModel.inventory = Convert.ToInt32(dtbl.Rows[0]["product_quantity"].ToString());
+                    productViewModel.Image_url = dtbl.Rows[0]["image_url"].ToString();
 
                 }
                 return productViewModel;
