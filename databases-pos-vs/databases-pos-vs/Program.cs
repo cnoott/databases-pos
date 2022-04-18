@@ -22,5 +22,7 @@ namespace databases_pos_vs
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+
     }
 }

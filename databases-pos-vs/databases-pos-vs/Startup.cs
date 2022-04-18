@@ -44,6 +44,7 @@ namespace databases_pos_vs
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
