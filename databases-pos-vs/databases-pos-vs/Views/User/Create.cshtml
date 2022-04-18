@@ -3,56 +3,166 @@
     ViewData["Title"] = "Create";
 }
 
-<section class="loginform cf">
+
+
+
+<section class="vh-150 loginform cf">
     <form asp-action="Create">
-		<ul>
-			<li>
-				<label asp-for="FirstName_">First Name</label>
-				<input asp-for="FirstName_" type="text" name="FirstName_" placeholder="John" required>
-			</li>
-			<li>
-				<label asp-for="LastName_">Last Name</label>
-				<input asp-for="LastName_" type="text" name="LastName_" placeholder="Smith" required>
-			</li>
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-xl-9">
 
-			<li>
-				<label asp-for="Email">Email</label>
-				<input asp-for="Email" type="email" name="Email" placeholder="yourname@email.com" required>
-			</li>
-			<li>
-				<label asp-for="Password">Password</label>
-				<input asp-for="Password" name="Password" placeholder="Password" required>
-			<li>
-				<label asp-for="Address">Address</label>
-				<input asp-for="Address" type="text" name="Address" required>
-			</li>
-			<li>
-				<label asp-for="City">City</label>
-				<input asp-for="City" type="text" name="City" required>
-			</li>
-			<li>
-				<label asp-for="State">State</label>
-				<input asp-for="State" type="text" name="State" required>
-			</li>
-			<li>
-				<label asp-for="Zipcode">Zipcode</label>
-				<input asp-for="Zipcode" type="text" name="Zipcode" required>
-			
+                    <h1 class=" mb-4">Register</h1>
 
-			<br />
-			<br />
-			<select asp-for="Role">
-				<option value="" style="display:none">Choose an account</option>
-				<option value="customer">Customer</option>
-				<option value="employee">Employee</option>
-			</select>
-			<br />
-			<input type="submit" value="Next">
-		</ul>
-    </form>
-	<br />
-	<p>Note: Address, State, City, and Zipcode for Customers</p>
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body">
+
+                            <div class="row align-items-center pt-4 pb-3">
+                                <div class="col-md-3 ps-5">
+
+                                    <label asp-for="FirstName_" class="hidden">First and</label>
+                                    <label asp-for="LastName_" class="hidden">Last name </label>
+
+                                </div>
+                                <div class="col-md-9 pe-5">
+
+                                    <input asp-for="FirstName_" class="form-control mb-3" type="text" name="FirstName_" placeholder="John" required>
+
+                                    <input asp-for="LastName_" class="form-control" type="text" name="LastName_" placeholder="Smith" required>
+                                </div>
+                            </div>
+
+                            <hr class="mx-n3">
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+
+                                    <label asp-for="Email" class="hidden">Email</label>
+
+
+                                </div>
+                                <div class="col-md-9 pe-5">
+
+                                    <input asp-for="Email" class="form-control" type="email" name="Email" placeholder="yourname@email.com" required>
+
+                                </div>
+                            </div>
+
+                            <hr class="mx-n3">
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+
+                                    <label asp-for="Password" class="hidden">Password</label>
+
+                                </div>
+                                <div class="col-md-9 pe-5">
+                                    <input asp-for="Password" type="password" name="Password" placeholder="Password" required>
+                                </div>
+                            </div>
+
+                            <hr class="mx-n3">
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+
+                                    <label asp-for="Address">Address</label>
+
+
+                                </div>
+                                <div class="col-md-9 pe-5">
+
+                                    <input asp-for="Address" type="text" name="Address" required>
+
+                                </div>
+                            </div>
+
+
+                            <hr class="mx-n3">
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+
+
+                                    <label asp-for="City">City</label>
+
+
+
+                                </div>
+                                <div class="col-md-9 pe-5">
+
+
+                                    <input asp-for="City" type="text" name="City" required>
+
+                                </div>
+                            </div>
+
+
+                            <hr class="mx-n3">
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+
+
+
+                                    <label asp-for="State">State</label>
+
+
+
+
+                                </div>
+                                <div class="col-md-9 pe-5">
+
+                                    <input asp-for="State" type="text" name="State" required>
+
+                                </div>
+                            </div>
+
+
+                            <hr class="mx-n3">
+
+                            <div class="row align-items-center py-3">
+                                <div class="col-md-3 ps-5">
+
+
+                                    <label asp-for="Zipcode">Zipcode</label>
+
+
+                                </div>
+                                <div class="col-md-9 pe-5">
+
+                                    <input asp-for="Zipcode" type="text" name="Zipcode" required>
+
+                                </div>
+                            </div>
+
+
+                            <hr class="mx-n3">
+
+ 
+
+
+                            <select asp-for="Role">
+                                <option value="" style="display:none">Choose an account</option>
+                                <option value="customer">Customer</option>
+                                <option value="employee">Employee</option>
+                            </select>
+
+                            <div class="px-5 py-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Send application</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </form>
+
 </section>
+
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

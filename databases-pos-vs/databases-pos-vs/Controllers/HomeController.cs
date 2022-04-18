@@ -134,6 +134,9 @@ namespace databases_pos_vs.Controllers
         [HttpPost]
         public IActionResult Checkout([Bind("Payment_Method, Shipping_Address")] TransactionViewModel transactionViewModel)
         {
+            string productCost = HttpContext.Request.Cookies["Sum"];
+            string totalCost = (Int32.Parse(productCost) + 12).ToString();
+
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
                 sqlConnection.Open();
@@ -143,8 +146,7 @@ namespace databases_pos_vs.Controllers
                 //
 
                 string userId = HttpContext.Request.Cookies["id"];
-                string productCost = HttpContext.Request.Cookies["Sum"];
-                string totalCost = (Int32.Parse(productCost) + 12).ToString();
+
 
                 string today = DateTime.Today.ToString();
 
@@ -264,7 +266,13 @@ namespace databases_pos_vs.Controllers
                 transactionViewModel.Order_Date = today;
                 //
             }
-            return RedirectToAction("Receipt", new { trans = transactionViewModel });
+            return RedirectToAction("Receipt", new {
+                email = transactionViewModel.email,
+                name = transactionViewModel.name,
+                id = transactionViewModel.Customer_id,
+                date = transactionViewModel.Order_Date,
+                total = totalCost
+            });;
         }
 
 
@@ -303,9 +311,15 @@ namespace databases_pos_vs.Controllers
                 return userViewModel;
             }
         }
-        public IActionResult Receipt(TransactionViewModel trans)
+        public IActionResult Receipt(string email, string name, string id, string date, string total)
         {
-            return View(trans);
+            TransactionViewModel transactionViewModel = new TransactionViewModel();
+            transactionViewModel.email = email;
+            transactionViewModel.name = name;
+            transactionViewModel.Customer_id = Int32.Parse(id);
+            transactionViewModel.Order_Date = date;
+            transactionViewModel.Total_Cost = total;
+            return View(transactionViewModel);
         }
     }
 }
