@@ -17,7 +17,7 @@
 
                     <div class="card-body">
                         <h5 class="card-title">@Model.Rows[i]["Name"]</h5>
-                        <p class="card-text">@Model.Rows[i]["Price"]</p>
+						<p class="card-text">@string.Format("{0:n2}", @Model.Rows[i]["Price"])</p>
                         <p class="card-text">@Model.Rows[i]["Size"]</p>
 
                         @if (Context.Request.Cookies.ContainsKey("email"))

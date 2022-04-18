@@ -204,7 +204,7 @@ namespace databases_pos_vs.Controllers
                     MySqlDataReader rdrr = transCmd.ExecuteReader();
 
                     rdrr.Close();
-                }
+                }   
 
                 int r = 0;
                 string sql = "SELECT @var";
@@ -218,12 +218,12 @@ namespace databases_pos_vs.Controllers
 
                 if (r == 33)
                 {
-                    string to = "oscers1001dennis@gmail.com"; //To address    
+                    string to = "mastershoe111@gmail.com";  //To address    
                     string from = "mastershoe111@gmail.com"; //From address    
                     MailMessage message = new MailMessage(from, to);
 
-                    string mailbody = "In this article you will learn how to send a email using Asp.Net & C#";
-                    message.Subject = "Sending Email Using Asp.Net & C#";
+                    string mailbody = "We have ordered more shoes";
+                    message.Subject = "Vendor Order";
                     message.Body = mailbody;
                     message.BodyEncoding = Encoding.UTF8;
                     message.IsBodyHtml = true;
@@ -251,8 +251,20 @@ namespace databases_pos_vs.Controllers
                 HttpContext.Response.Cookies.Delete("Qty");
                 HttpContext.Response.Cookies.Delete("Sum");
 
+
+                DataTable edtbl = new DataTable();
+                MySqlDataAdapter daEmail;
+                string emailQuery = "SELECT Users.email, Customers.FirstName, Customers.LastName FROM Users, Customers WHERE Users.user_id = '"+userId+"' AND  Customers.CustomerID = '"+userId+"'";
+                daEmail = new MySqlDataAdapter(emailQuery, sqlConnection);
+                daEmail.Fill(edtbl);
+
+                transactionViewModel.email = edtbl.Rows[0]["email"].ToString();
+                transactionViewModel.name = edtbl.Rows[0]["FirstName"].ToString() + " " + edtbl.Rows[0]["LastName"].ToString();
+                transactionViewModel.Customer_id = Int32.Parse(userId);
+                transactionViewModel.Order_Date = today;
+                //
             }
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Receipt", new { trans = transactionViewModel });
         }
 
 
@@ -290,6 +302,10 @@ namespace databases_pos_vs.Controllers
 
                 return userViewModel;
             }
+        }
+        public IActionResult Receipt(TransactionViewModel trans)
+        {
+            return View(trans);
         }
     }
 }

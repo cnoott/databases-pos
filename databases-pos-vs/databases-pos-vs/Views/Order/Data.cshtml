@@ -50,28 +50,28 @@
             <td>
                 @Model.Rows[i]["Quantity"]
             </td>
-            <td>
-                @Model.Rows[i]["Vendor_price"]
-            </td>
+			<td>
+				@string.Format("{0:n2}", @Model.Rows[i]["Vendor_price"])
+			</td>
             <td>
                 @Model.Rows[i]["Date_buy"]
             </td>
             <td>
                 @Model.Rows[i]["Name"]
             </td>
-            <td>
-                @Model.Rows[i]["Price"]
-            </td>
+			<td>
+				@string.Format("{0:n2}", @Model.Rows[i]["Price"])
+			</td>
 
-            <td data-toggle="popover" data-trigger="hover" data-html="true"
-                data-content="Retail Price: @Model.Rows[i]["price"] <br />Quantities Sold: @Model.Rows[i]["Times_sold"] ">
-                @revenue
-            </td>
+			<td data-toggle="popover" data-trigger="hover" data-html="true"
+				data-content="Retail Price: @string.Format("{0:n2}", @Model.Rows[i]["price"]) <br />Quantities Sold: @Model.Rows[i]["Times_sold"] ">
+				@string.Format("{0:n2}",revenue)
+			</td>
 
-            <td data-toggle="popover" data-trigger="hover" data-html="true"
-                data-content="Vendor Price: @Model.Rows[i]["vendor_price"] <br />Quantity Ordered: @Model.Rows[i]["Quantity"] ">
-                @oneTimeTotal
-            </td>
+			<td data-toggle="popover" data-trigger="hover" data-html="true"
+				data-content="Vendor Price: @string.Format("{0:n2}", @Model.Rows[i]["vendor_price"]) <br />Quantity Ordered: @Model.Rows[i]["Quantity"] ">
+				@string.Format("{0:n2}", oneTimeTotal)
+			</td>
 
             @*<td>
             <a asp-action="Purchase_Details" asp-route-id="@Model.Rows[i]["Transaction_id"]">Details of Order</a>
@@ -83,7 +83,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td >Total Buying Costs From Vendors: @total</td>
+			<td>Total Buying Costs From Vendors: @string.Format("{0:n2}", total)</td>
         </tr>
     </tbody>
 
