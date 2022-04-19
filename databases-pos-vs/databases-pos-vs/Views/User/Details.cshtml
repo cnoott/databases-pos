@@ -87,7 +87,7 @@
 	<a asp-action="Edit" asp-route-id="@Model.UserID">Edit Account</a>
 	<br />
 	@if (Context.Request.Cookies["role"] == "customer") {
-		<a asp-controller="Customer" asp-action="Data" asp-route-id="@Model.UserID">Generate Transaction History</a>
+		<a asp-controller="Customer" asp-action="Report" asp-route-id="@Model.UserID">Generate Transaction History Report</a>
 	}
 </div>
 @section Scripts {

@@ -23,22 +23,47 @@ namespace databseApp.Controllers
             this._configuration = configuration;
         }
 
+        
+        public IActionResult Report()
+        {
+            CustomerViewModel cusViewModel = new CustomerViewModel();
+            return View(cusViewModel);
+        }
+        
+
+        //POST: /Transaction/Report
+        [HttpPost]
+        public IActionResult Report(string query, [Bind("StartDate,EndDate,StartPrice,EndPrice,Shoe")] CustomerViewModel cusViewModel)
+        {
+                int userid = Int32.Parse(Request.Cookies["id"]);
+                string sql;
+
+            if (cusViewModel.Shoe == null || cusViewModel.Shoe == "") { 
+                sql = string.Format("SELECT * FROM Transaction_Info WHERE customer_id = '"+userid+"' AND " + 
+                    "( '"+cusViewModel.StartDate+"' <= order_date AND order_date <= '"+cusViewModel.EndDate+"')" + 
+                    "ORDER BY transaction_id DESC");
+            }   
+            else
+            {
+                sql = string.Format("SELECT * FROM Transaction_Info, Transactions, Products WHERE customer_id = '"+userid+"' AND " + 
+                    "( '"+cusViewModel.StartDate+"' <= order_date AND order_date <= '"+cusViewModel.EndDate+"')" + 
+                    " AND Transaction_Info.transaction_id = Transactions.transaction_info_id " + 
+                    " AND Transactions.product_id = Products.product_id " +
+                    " AND Products.name = '"+cusViewModel.Shoe+"' " +
+                    "ORDER BY Transaction_Info.transaction_id DESC");
+            }
+            return RedirectToAction(nameof(Data), new { query = sql });
+        }
 
 
-
-
-        public IActionResult Data()
+        public IActionResult Data(string query)
         {
             MySqlDataAdapter daTransactions;
             DataTable dtbl = new DataTable();
-            int userid = Int32.Parse(Request.Cookies["id"]);
+
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
-                sqlConnection.Open();
-
-                string query = "SELECT * From Transaction_Info WHERE customer_id = '"+userid+"' ORDER BY transaction_id DESC";
-
-              
+                sqlConnection.Open();              
                 daTransactions = new MySqlDataAdapter(query, sqlConnection);
                 MySqlCommandBuilder cb = new MySqlCommandBuilder(daTransactions);
                 daTransactions.Fill(dtbl);

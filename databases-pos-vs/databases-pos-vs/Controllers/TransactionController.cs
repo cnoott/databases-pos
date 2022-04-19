@@ -55,10 +55,9 @@ namespace databseApp.Controllers
         public IActionResult Report(string query, [Bind("StartDate,EndDate,StartPrice,EndPrice")] TransactionViewModel transactionViewModel)
         {
 
-                string sql = string.Format("SELECT * FROM Transaction_Info WHERE (order_date >= order_date < \"{1}\") AND (total_cost >= \"{2}\"AND total_cost < \"{3}\")",
-                    transactionViewModel.StartDate, transactionViewModel.EndDate, transactionViewModel.StartPrice, transactionViewModel.EndPrice);
-
-          
+                string sql = string.Format("SELECT * FROM Transaction_Info WHERE  '"+transactionViewModel.StartDate+"' <= order_date AND order_date <= '"+transactionViewModel.EndDate+"'" + 
+                    " AND (total_cost >= \"{0}\"AND total_cost < \"{1}\") ORDER BY transaction_id DESC",
+                    transactionViewModel.StartPrice, transactionViewModel.EndPrice);
             return RedirectToAction(nameof(ViewTable), new { query = sql });
         }
 
