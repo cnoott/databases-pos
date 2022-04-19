@@ -16,7 +16,7 @@ namespace databseApp.Models
         public string Shipping_Cost { get; set; }
         public string Total_Cost { get; set; }
 
-        //public [] string
+        public string Shoe { get; set; }
 
         //Data for report
         public string StartDate { get; set; }
