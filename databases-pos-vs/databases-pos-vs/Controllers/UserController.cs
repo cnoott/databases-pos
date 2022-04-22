@@ -57,6 +57,7 @@ namespace databseApp.Controllers
             MySqlDataAdapter daUsers;
             MySqlDataAdapter daName;
 
+
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
                 sqlConnection.Open();

@@ -136,6 +136,7 @@ namespace databases_pos_vs.Controllers
         {
             string productCost = HttpContext.Request.Cookies["Sum"];
             string totalCost = (Int32.Parse(productCost) + 12).ToString();
+     
 
             using (MySqlConnection sqlConnection = new MySqlConnection(_configuration.GetConnectionString("DevConnection")))
             {
@@ -161,7 +162,7 @@ namespace databases_pos_vs.Controllers
                 sqlCmd1.Parameters.AddWithValue("@Payment_method", transactionViewModel.Payment_Method);
                 sqlCmd1.Parameters.AddWithValue("@Order_date", today);
                 sqlCmd1.Parameters.AddWithValue("@Shipping_address", transactionViewModel.Shipping_Address);
-                sqlCmd1.Parameters.AddWithValue("@Product_cost", totalCost);
+                sqlCmd1.Parameters.AddWithValue("@Product_cost", productCost);
                 sqlCmd1.Parameters.AddWithValue("@Total_cost", Double.Parse(totalCost));
 
 
@@ -221,7 +222,7 @@ namespace databases_pos_vs.Controllers
                 if (r == 33)
                 {
                     string to = "mastershoe111@gmail.com";  //To address    
-                    string from = "mastershoe111@gmail.com"; //From address    
+                    string from = "mastershoe1v11@gmail.com"; //From address    
                     MailMessage message = new MailMessage(from, to);
 
                     string mailbody = "We have ordered more shoes";
